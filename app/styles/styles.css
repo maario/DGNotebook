@@ -1,0 +1,18 @@
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width:auto;
+  max-width: 500px;
+  margin: 20px auto;
+}
+.white-popup .mfp-close{
+	color: black;
+}
+.white{
+	background: #FFF;
+}
+body{
+	padding-top: 70px;
+	padding-bottom: 140px
+}

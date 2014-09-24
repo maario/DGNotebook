@@ -1,0 +1,82 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li><a ng-click="confirmDelete()"><span class="fa fa-trash-o"></span></a></li>
+    <li><a href="#/History"><span class="fa fa-check"></span></a></li>
+  </ul>
+
+  <h3 class="text-muted">{{game.place}}</h3>
+  <h6 class="text-muted" ng-bind="formatDate('{{game.date}}')">{{game.date}}</h6>
+</div>
+<div>
+  <div ng-repeat="p in game.players" class="panel panel-info">
+    <div class="panel-heading">{{p.name}}</div>
+    <table class="text-center table bordered">
+      <thead>
+        <tr>
+          <td>#</td>
+          <td>Par</td>
+          <td>Score</td>
+          <td>Total</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in game.fairways">
+          <td>{{f.index}}</td>
+          <td>{{f.par}}</td>
+          <td>{{f[p.name]}}</td>
+          <td ng-bind="colorTotal({{f[p.name]}},'scorerow_{{p.name}}_{{$index+1}}',f.par)" id="scorerow_{{p.name}}_{{$index+1}}">{{f[p.name] - f.par}}</td>
+        </tr>
+        <tr class="active">
+          <td></td>
+          <td ng-bind="getTotalsumOfPars()"></td>
+          <td ng-bind="getTotalScore('{{p.name}}')"></td>
+          <td class="active" ng-bind="colorScore({{p.score}},'totalrow_{{p.name}}_{{$index+1}}',0)" id="totalrow_{{p.name}}_{{$index+1}}">{{p.score}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- NEW-DELETE-POPUP -->
+<div id="delete-popup" class="white-popup mfp-hide">
+  <button type="button" class="mfp-close">x</button>
+  <div class="modal-body">
+    <p>Do you want to delete this note?</p>
+    <small>You can't get it back..</small>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-warning" ng-click="closePopup()"><span class="fa fa-times"></span></button>
+    <button type="button" class="btn btn-success" ng-click="delete()"><span class="fa fa-check"></span></button>
+  </div>
+</div>
+<!-- END NEW-DELETE-POPUP -->
+
+<script type="text/javascript">
+  var iconsToTxt = {
+    calendar: 'date',
+    location: 'place',
+    search: 'view',
+    times: 'noup',
+    check: 'ok',
+    trash: 'delete'
+  }
+  if(bowser.windowsphone){
+      $('.fa-trash-o').html(iconsToTxt.trash)
+      $('.fa-trash-o').removeClass()
+
+      $('.fa-check').html(iconsToTxt.check)
+      $('.fa-check').removeClass()
+
+      $('.fa-times').html(iconsToTxt.times)
+      $('.fa-times').removeClass()
+
+      $('.fa-calendar').html(iconsToTxt.calendar)
+      $('.fa-calendar').removeClass()
+      
+      $('.fa-map-marker').html(iconsToTxt.location)
+      $('.fa-map-marker').removeClass()
+      
+      $('.fa-search').removeClass()
+      $('.fa-search').html(iconsToTxt.search)
+    }
+</script>

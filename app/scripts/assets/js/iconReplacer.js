@@ -1,0 +1,3 @@
+if(!Modernizr.fontface){
+	
+}

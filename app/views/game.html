@@ -1,0 +1,225 @@
+<div class="header" id="prepGameHeader">
+  <nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">DG Notebook</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#/Game">Game</a></li>
+          <li><a href="#/History">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+<!-- STARTING GAME -->
+<div class=" text-center" id="startingGame">
+  <div>
+    <form role="form" ng-submit="continue()">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i></span>
+        <input type="text" class="form-control" placeholder="Location" id="inputPlace" ng-model="game.place" required/>
+      </div>
+      <br/>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
+        <input type="date" class="form-control" ng-model="game.date" required/>
+      </div>
+      <br/>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+        <input type="text" class="form-control" placeholder="Player" id="inputPlayer" ng-model="temp.playername"/>
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="addPlayer()"><span class="fa fa-plus"></span></button>
+        </span>
+      </div>
+      <h2 id="playerlistmarks"></h2>
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="p in game.players">{{p.name}}<button type="button" class="close pull-right" ng-click="deletePlayer(this.p.name)" aria-hidden="true">&times;</button></li>
+      </ul>
+      <button ng-show="game.players.length" type="submit" class="btn btn-lg btn-info">Continue</button>
+    </form>
+    
+  </div>  
+</div>
+<!-- GAME -->
+
+<div class="" id="game" style="display:none">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <ul class="nav navbar-nav">
+          <li class=""><a ng-click="generatePopup('scoretable-popup')" class="btn btn-link" style="">SCOREBOARD</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="">
+    <div class="well well-sm col-xs-12" ng-repeat="p in game.players">
+      <div class="col-xs-4 center-block"><p class="lead">{{p.name}}<br/><span id="miniscore_{{p.name}}" class="label alert-info">{{p.score}}</span></p></div>
+      <input type="button" class="btn btn-default btn-lg col-xs-2" id="{{p.name}}TempScore" value="0" disabled />
+      <button type="button" class="btn btn-lg btn-danger col-xs-3" name="{{p.name}}" ng-click="changeTempScore($event.currentTarget.name,-1,true)"><span class="fa fa-minus"></span></button>
+      <button type="button" class="btn btn-lg btn-success col-xs-3" name="{{p.name}}" ng-click="changeTempScore($event.currentTarget.name,1,true)"><span class="fa fa-plus"></span></button>
+    </div>
+  </div>
+  <nav class="navbar navbar-fixed-bottom navbar-inverse" role="navigation">
+    <div class="container-fluid">
+      <div class="" id="">
+        <ul class="nav navbar-nav">
+          <p class="text-center text-default" style="color:lightGrey">FAIRWAY {{game.fairways.length+1}}</p>
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default">PAR</button>
+            </div>
+            <div class="btn-group">
+              <input type="button" id="parBtn" class="btn btn-default" value="3" />
+            </div>
+            <div class="btn-group">
+              <button type="button" ng-click="addValueTo('parBtn',-1)" class="btn btn-danger"><span class="fa fa-minus"></span></button>
+            </div>
+            <div class="btn-group">
+              <button type="button" ng-click="addValueTo('parBtn',1)" class="btn btn-success"><span class="fa fa-plus"></span></button>
+            </div>
+          </div>
+          <hr />
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button ng-show="game.fairways.length" type="button" ng-click="endGame()" class="btn btn-default "><span class="fa fa-times"></span></button>
+            </div>
+            <div class="btn-group">
+              <button type="button" ng-click="nextFairway()" class="btn btn-default"><span class="fa fa-chevron-right"></span></button>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+<!-- END GAME -->
+<div id="scoretable-popup" class="white-popup mfp-hide">
+  <button type="button" class="mfp-close">x</button>
+  <div class="modal-header">SCOREBOARD</div>
+  <div class="modal-body">
+    <div ng-repeat="p in game.players" class="panel panel-info">
+      <div class="panel-heading">{{p.name}}</div>
+      <table class="text-center table bordered">
+        <thead>
+          <tr>
+            <td>#</td>
+            <td>Par</td>
+            <td>Score</td>
+            <td>Total</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="f in game.fairways">
+            <td>{{f.index}}</td>
+            <td>{{f.par}}</td>
+            <td>{{f[p.name]}}</td>
+            <td ng-bind="colorTotal({{f[p.name]}},'scorerow_{{p.name}}_{{$index+1}}',f.par)" id="scorerow_{{p.name}}_{{$index+1}}">{{f[p.name] - f.par}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- NEW-EXIT-POPUP -->
+<div id="exit-popup" class="white-popup mfp-hide">
+  <button type="button" class="mfp-close">x</button>
+  <div class="modal-body">
+    <p>Do you want to end game?</p>
+    <small>Game will be saved</small>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-warning" ng-click="closePopup()"><span class="fa fa-times">
+    </span></button>
+    <button type="button" class="btn btn-success" ng-click="saveGame()"><span class="fa fa-check"></span></button>
+  </div>
+</div>
+<!-- END NEW-EXIT-POPUP -->
+<!-- NEW-NOTIFY-POPUP -->
+<div id="notify-popup" class="white-popup mfp-hide">
+  <button type="button" class="mfp-close">x</button>
+  <h4>Set score(s) or end game</h4>
+</div>
+<!-- END NEW-NOTIFY-POPUP -->
+<!-- MODIFY-SCORE-POPUP -->
+<div id="modify-score-popup" class="white-popup mfp-hide text-center">
+  <div class="modal-body">
+    <button type="button" class="mfp-close" ng-click="modifyScore()">x</button>
+    <div class="modal-header">
+      <h1>Modify Score</h1>
+      <p><span id="modifyscore_playertag"></span><br/><span id="modifyscore_fairwaytag"></span></p>
+    </div>
+    <div class="modal-content">
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+          <input type="button" id="modifyscore_tempscore" class="btn btn-default" value="" />
+        </div>
+        <div class="btn-group">
+          <button type="button" ng-click="addValueTo('modifyscore_tempscore',-1)" class="btn btn-danger"><span class="fa fa-minus"></span></button>
+        </div>
+        <div class="btn-group">
+          <button type="button" ng-click="addValueTo('modifyscore_tempscore',1)" class="btn btn-success"><span class="fa fa-plus"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODIFY-SCORE-POPUP -->
+
+<script type="text/javascript">
+  var iconsToTxt = {
+    calendar: 'date',
+    location: 'place',
+    search: 'view',
+    times: 'x',
+    check: 'ok',
+    trash: 'delete',
+    plus: '+',
+    minus: '-',
+    right: '>',
+    user: 'player',
+    down: 'open'
+  }
+  if(bowser.windowsphone){
+      $('.fa-trash-o').html(iconsToTxt.trash)
+      $('.fa-trash-o').removeClass()
+
+      $('.fa-chevron-down').html(iconsToTxt.down)
+      $('.fa-chevron-down').removeClass()
+
+      $('.fa-chevron-right').html(iconsToTxt.right)
+      $('.fa-chevron-right').removeClass()
+
+      $('.fa-user').html(iconsToTxt.user)
+      $('.fa-user').removeClass()
+
+      $('.fa-check').html(iconsToTxt.check)
+      $('.fa-check').removeClass()
+
+      $('.fa-times').html(iconsToTxt.times)
+      $('.fa-times').removeClass()
+
+      $('.fa-plus').html(iconsToTxt.plus)
+      $('.fa-plus').removeClass()
+
+      $('.fa-minus').html(iconsToTxt.minus)
+      $('.fa-minus').removeClass()
+
+      $('.fa-calendar').html(iconsToTxt.calendar)
+      $('.fa-calendar').removeClass()
+      
+      $('.fa-map-marker').html(iconsToTxt.location)
+      $('.fa-map-marker').removeClass()
+      
+      $('.fa-search').removeClass()
+      $('.fa-search').html(iconsToTxt.search)
+    }
+</script>
+

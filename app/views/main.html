@@ -1,0 +1,62 @@
+<nav class="navbar navbar-inverse " role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">DG Notebook</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li></li>
+        <li><a href="#/Game">Game</a></li>
+        <li><a href="#/History">Notes</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="jumbotron white text-center">
+	<h1>DiscGolf Notebook<br/><small>go for it - note it</small></h1>
+  <a type="button" class="btn btn-lg btn-default" href="#/Game">new note</a>
+</div>
+<div class="well text-center white">
+  <h2>Latest notes</h2>
+  <table ng-show="games.length" class="table table-striped table-bordered table-hover text-center">
+    <thead>
+      <tr>
+        <th class="text-center"><span class="fa fa-map-marker"></span></th>
+        <th class="text-center"><span class="fa fa-calendar"></span></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-click="alert()" ng-repeat="game in games | orderBy:orderProp:true | limitTo: 5" class="">
+        <td>{{game.place}}</td>
+        <td ng-bind="formatDate('{{game.date}}')">{{game.date}}</td>
+        <td><button type="button" class="btn btn-default btn-lg btn-block" ng-click="viewHistory()"><span class="fa fa-search"></span></button></td>
+      </tr>
+    </tbody>
+  </table>
+  <a class="btn btn-lg btn-info" href="#/History">See all notes</a>
+</div>
+
+<script type="text/javascript">
+  var iconsToTxt = {
+    calendar: 'date',
+    location: 'place',
+    search: 'view'
+  }
+  if(bowser.windowsphone){
+      $('.fa-calendar').html(iconsToTxt.calendar)
+      $('.fa-calendar').removeClass()
+      
+      $('.fa-map-marker').html(iconsToTxt.location)
+      $('.fa-map-marker').removeClass()
+      
+      $('.fa-search').removeClass()
+      $('.fa-search').html(iconsToTxt.search)
+    }
+</script>
